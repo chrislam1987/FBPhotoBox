@@ -12,5 +12,7 @@ This plugin is just finished the core part.
 Please give a try and giving feedbacks to me, as this is my first personal project : )
 
 External Resource Using:
+
 ICON: http://flaticons.net/
+
 Dummy Image: http://dummy-image-generator.com/
