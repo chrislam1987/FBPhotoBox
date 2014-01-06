@@ -3,15 +3,19 @@
 		this.targetObj = item;
 		this.settings = $.extend({}, $.fn.fbPhotoBox.defaults, opts);
 		this.fullScreenMode = false;
-		this.rightArrow = $(".right-arrow");
-		this.leftArrow = $(".left-arrow");
+		this.rightArrow = null;
+		this.leftArrow = null;
 		this.init();
 	}
 	
 	FbPhotoBox.prototype = {
 		init: function() {
+			this.initDOM();
+			
 			var $this = this;
 			var $thistTargetObj = $this.targetObj;
+			this.rightArrow = $(".right-arrow");
+			this.leftArrow = $(".left-arrow");
 			
 			this.initSettings();
 			
@@ -101,7 +105,7 @@
 			
 			if (this.settings.height != "") {
 				$(".fbphotobox-container-left").css("height", this.settings.height);
-				$(".fbphotobox-container-right").css("height", this.settings.height);
+				$(".fbphotobox-container-right, .fbphotobox-image-content").css("height", this.settings.height);
 			}
 			
 			if (this.settings.leftBgColor != "") {
@@ -130,6 +134,33 @@
 				width: Math.max($(".fbphotobox-container-left").width() + $(".fbphotobox-container-right").width(), 880),
 				height: $(".fbphotobox-container-left").height()
 			});
+		},
+		
+		initDOM: function() {
+			var html = '<div class="fbphotobox-main-container">';
+			html += '<div><div class="fbphotobox-container"><div class="fbphotobox-container-left">';
+			html += '<table style="height:100%;width:100%;text-align:center;"><tr><td><div style="position:relative;display:inline-block;">';
+			html += '<img class="fbphotobox-main-image" src=""/></div></td></tr></table><div class="fbphotobox-image-stage-overlay">';
+			html += '<div class="fbphotobox-container-left-header"><a title="Full Screen" class="fbphotobox-fc-btn fbphotobox-a" style="background-image: url(./images/Full-Screen-Expand-48.png);';
+			html += 'background-repeat: no-repeat;background-size: 20px 20px;background-position: 0 0;display: block;width:20px;height:20px;"></a>';
+			html += '</div><div data-prev-index="" class="left-arrow"><table style="height:100%"><tr><td style="vertical-align:middle;"><a class="fbphotobox-a" title="Previous" style="background-image: url(./images/Arrowhead-Left-01-48.png);';
+			html += 'background-repeat: no-repeat;background-size: 35px 45px;background-position: 0px 0px;display: block;height: 45px;width: 35px;"></a>';
+			html += '</td></tr></table></div><div data-next-index="" class="right-arrow"><table style="height:100%;"><tr><td style="vertical-align:middle;">';
+			html += '<a class="fbphotobox-a" title="Next" style="background-image: url(./images/Arrowhead-Right-01-48.png);background-repeat: no-repeat;background-size: 35px 45px;';
+			html += 'background-position: 0px 0px;display: block;height: 45px;width: 35px;"></a></td></tr></table></div>';
+			html += '<div class="fbphotobox-container-left-footer"><div style="margin:20px;"><span style="font-weight:bold;">Dummy Photo Caption</span>';
+			html += '<span style="color:#B3B3B3;"> in </span><span style="font-weight:bold;">Dummy Album Name</span></div></div><div class="fbphotobox-container-left-footer-bg"></div>';
+			html += '</div></div><div class="fbphotobox-container-right" style="color:black;overflow-y:scroll;overflow-x:hidden;"><div class="fbphotobox-close-btn">';
+			html += '<a title="Close" href="" style="float:right;margin:8px"><img src="./images/close.png" style="height:10px;width:10px"/></a><div style="clear:both"></div></div>';
+			html += '<div class="fbphotobox-image-content"></div></div><div style="clear:both"></div></div></div></div>';
+			html += '<div class="fbphotobox-fc-main-container"><div class="fbphotobox-fc-header" style="position:fixed;left:0px;right:0px;top:0px;"><div style="float:left">Dummy Header</div>';
+			html += '<a class="fbphotobox-fc-close-btn" href="" style="float:right">Exit Full Screen Mode</a></div><div style="position:fixed;top:0px;right:0px;left:0px;bottom:0px;width:100%;margin:auto;height:700px;">';
+			html += '<table style="width:100%;text-align:center;height:700px;"><tr><td class="fc-left-arrow" style="width:50px;text-align:center;"><a class="fbphotobox-a" title="Previous" style="background-image: url(./images/Arrowhead-Left-01-48.png);';
+			html += 'background-repeat: no-repeat;background-size: 35px 45px;background-position: 0px 0px;display: block;height: 45px;width: 35px;"></a></td><td><img class="fbphotobox-fc-main-image" src="" style="max-width:900px;max-height:650px" />';
+			html += '</td><td class="fc-right-arrow" style="width:50px;text-align:center;"><a class="fbphotobox-a" title="Next" style="background-image: url(./images/Arrowhead-Right-01-48.png);background-repeat: no-repeat;';
+			html += 'background-size: 35px 45px;background-position: 0px 0px;display: block;height: 45px;width: 35px;"></a></td></tr></table></div><div class="fbphotobox-fc-footer" style="position:fixed;left:0px;right:0px;bottom:0px;">';
+			html += 'Dummy Footer</div></div><div class="fbphotobox-overlay" style="display:none;"></div><div style="clear:both"></div>';
+			$("body").append(html);
 		},
 		
 		show: function(image) {
