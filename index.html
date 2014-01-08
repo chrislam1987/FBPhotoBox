@@ -10,22 +10,36 @@
 <script>
 	$(document).ready(function() {
 		$(".fbphotobox img").fbPhotoBox({
-			leftWidth: 600,
-			height: 650,
+			rightWidth: 200,
+			leftBgColor: "black",
+			rightBgColor: "white",
+			footerBgColor: "black",
+			overlayBgColor: "#1D1D1D",
 			onImageShow: function() {
 				$(".fbphotobox img").fbPhotoBox(
 						"addTags",
-						[{x:0.3,y:0.3,w:0.3,h:0.3}],
-						$(this)
+						[{x:0.3,y:0.3,w:0.3,h:0.3}]
 				);
 				$(".fbphotobox img").fbPhotoBox(
 						"addContent",
-						"fdsafdsafd<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>fdsafdsafd<br/>fdsafdsafd<br/>fdsafdsafd<br/>fdsafdsafd<br/>fdsafdsafd<br/>fdsafdsafd<br/>fdsafdsafd<br/>fdsafdsafd<br/>fdsafdsafd<br/>"
+						'<div style="font-size:16px;">Testing Content</div><br/>'+$(this).attr("src")
 				);
 			}
 		});
 	});
 </script>
+<style>
+	body {
+		font-family: 'lucida grande', tahoma, verdana, arial, sans-serif;
+		font-size: 13px;
+		position: relative;
+	}
+	
+	.fbphotobox img {
+		max-width: 400px;
+		max-height: 400px;
+	}
+</style>
 </head>
 <body>
 	
@@ -41,5 +55,92 @@
 		<img fbphotobox-src="./images/dummy-1760x990-Mosque.jpg" src="./images/dummy-1760x990-Mosque.jpg"/>
 		<img fbphotobox-src="./images/dummy-1920x2560-Goemetry.jpg" src="./images/dummy-1920x2560-Goemetry.jpg"/>
 	</div>
+	
+	<div class="fbphotobox-main-container">
+		<div class="fbphotobox-container-left">
+			<table style="height:100%;width:100%;text-align:center;">
+				<tr>
+					<td>
+						<div style="position:relative;display:inline-block;">
+							<img class="fbphotobox-main-image" src=""/>
+						</div>
+					</td>
+				</tr>
+			</table>
+			<div class="fbphotobox-image-stage-overlay">
+				<div class="fbphotobox-container-left-header">
+					<a title="Full Screen" class="fbphotobox-fc-btn fbphotobox-a" style="background-image: url(./images/Full-Screen-Expand.png);
+						background-repeat: no-repeat;background-size:auto;background-position: 0 0;display: block;width:18px;height:18px;"></a>
+				</div>
+				<div data-prev-index="" class="left-arrow">
+					<table style="height:100%">
+						<tr>
+							<td style="vertical-align:middle;">
+								<a class="fbphotobox-a" title="Previous" style="background-image: url(./images/Arrowhead-Left.png);
+									background-repeat: no-repeat;background-size:auto;background-position: 0px 0px;display: block;height: 47px;width: 37px;"></a>
+							</td>
+						</tr>
+					</table>
+				</div>
+				<div data-next-index="" class="right-arrow">
+					<table style="height:100%;">
+						<tr>
+							<td style="vertical-align:middle;">
+								<a class="fbphotobox-a" title="Next" style="background-image: url(./images/Arrowhead-Right.png);background-repeat: no-repeat;background-size:auto;
+									background-position: 0px 0px;display: block;height: 47px;width: 37px;"></a>
+							</td>
+						</tr>
+					</table>
+				</div>
+				<div class="fbphotobox-container-left-footer">
+					<div style="margin:20px;">
+						<span style="font-weight:bold;">Dummy Photo Caption</span>
+						<span style="color:#B3B3B3;"> in </span>
+						<span style="font-weight:bold;">Dummy Album Name</span>
+					</div>
+				</div>
+				<div class="fbphotobox-container-left-footer-bg"></div>
+			</div>
+		</div>
+		<div class="fbphotobox-container-right">
+			<div class="fbphotobox-close-btn">
+				<a title="Close" href="" style="float:right;margin:8px">
+					<img src="./images/close.png" style="height:10px;width:10px"/>
+				</a>
+				<div style="clear:both"></div>
+			</div>
+			<div class="fbphotobox-image-content" style="color:black;overflow-y:scroll;overflow-x:hidden;"></div>
+		</div>
+		<div style="clear:both"></div>
+	</div>
+	<div class="fbphotobox-fc-main-container">
+		<div class="fbphotobox-fc-header" style="position:fixed;left:0px;right:0px;top:0px;color:white;">
+			<div style="float:left">Dummy Header</div>
+			<a class="fbphotobox-fc-close-btn" href="" style="color: #FFFFFF;float: right;padding: 2px 10px;text-decoration: none;">Exit</a>
+			<div style="clear:both"></div>
+		</div>
+		<div style="position:fixed;top:0px;right:0px;left:0px;bottom:0px;margin:auto;">
+			<table style="width:100%;height:100%;text-align:center;">
+				<tr>
+					<td class="fc-left-arrow" style="width:50px;text-align:center;">
+						<a class="fbphotobox-a" title="Previous" style="background-image: url(./images/Arrowhead-Left.png);
+							float:left;background-repeat: no-repeat;background-size:37px 47px;background-position: 0px 0px;height: 47px;width: 37px;"></a>
+					</td>
+					<td>
+						<img class="fbphotobox-fc-main-image" src=""/>
+					</td>
+					<td class="fc-right-arrow" style="width:50px;text-align:center;">
+						<a class="fbphotobox-a" title="Next" style="background-image: url(./images/Arrowhead-Right.png);background-repeat: no-repeat;
+							float:right;background-size:37px 47px;background-position: 0px 0px;height: 47px;width: 37px;"></a>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div class="fbphotobox-fc-footer" style="position:fixed;left:0px;right:0px;bottom:0px;color:white;">
+			Dummy Footer
+			<div style="clear:both"></div>
+		</div>
+	</div>
+	<div class="fbphotobox-overlay" style="display:none;"></div><div style="clear:both"></div>
 </body>
 </html>

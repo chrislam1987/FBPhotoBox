@@ -1,15 +1,4 @@
 @CHARSET "UTF-8";
-body {
-	font-family: 'lucida grande', tahoma, verdana, arial, sans-serif;
-	font-size: 13px;
-	position: relative;
-}
-
-.fbphotobox img {
-	max-width: 400px;
-	max-height: 400px;
-}
-
 .fbphotobox-overlay {
 	width: 100%;
 	height: 100%;
@@ -19,12 +8,10 @@ body {
 	top: 0px;
 	right: 0px;
 	bottom: 0px;
-	background-color: rgba(0, 0, 0, 0.8);
 }
 
 .fbphotobox-fc-main-container {
-	width: 100%;
-	height: 100%;
+	margin: auto;
 	position: fixed;
 	z-index: 400;
 	left: 0px;
@@ -48,28 +35,18 @@ body {
 	right:0px;
 	left:0px;
 	bottom:0px;
-}
-
-.fbphotobox-container {
-	background-color: black;
-	position: relative;
+	border:1px solid #000;
+	border-radius:2px;
 }
 
 .fbphotobox-container-left {
-	width: 520px;
-	height: 520px;
 	float: left;
-	opacity: 1;
 	position: relative;
+	border-
 }
 
 .fbphotobox-container-left:hover {
 	cursor: pointer;
-}
-
-.fbphotobox-container-left img {
-	max-width: 100%;
-	max-height: 514px;
 }
 
 .fbphotobox-container-left table td {
@@ -79,11 +56,8 @@ body {
 }
 
 .fbphotobox-container-right {
-	width: 360px;
-	height: 520px;
 	float: right;
 	background-color: white;
-	opacity: 1;
 }
 
 .fbphotobox-container-left-footer, .fbphotobox-container-left-footer-bg {
@@ -96,6 +70,8 @@ body {
 
 .fbphotobox-container-left-footer {
 	z-index: 300;
+	height: 56px;
+	overflow: hidden;
 }
 
 .fbphotobox-container-left-footer-bg {
@@ -143,8 +119,8 @@ body {
 
 .fbphotobox-tag div {
 	display: none;
-	position: relative;
-	padding: 2px 4px;
+	width:100%;
+	border-radius:none;
 }
 
 .fbphotobox-tag:hover {
@@ -162,6 +138,6 @@ table, tr, td {
 	border-collapse: collapse;
 }
 
-.fbphotobox-fc-footer, .fbphotobox-fc-header {
-	color: white;
+.fbphotobox-fc-close-btn:hover {
+	background-color: #777;
 }
