@@ -12,11 +12,11 @@
 	FBPhotoBox.prototype = {
 		init: function() {
 			var $this = this;
+			this.initDOM();
+			this.initSettings();
 			this.rightArrow = $(".right-arrow");
 			this.leftArrow = $(".left-arrow");
 			this.tempImage.onload = function() { $this.refreshBoxSize(this); }
-			this.initDOM();
-			this.initSettings();
 			$(window).resize(function() { $this.refreshBoxSize(); $this.refreshFullScreenSize(); });
 			
 			this.targetObj.click(function() {
@@ -125,6 +125,87 @@
 		},
 		
 		initDOM: function() {
+			var html = '<div class="fbphotobox-main-container">';
+			html += '<div class="fbphotobox-container-left">';
+			html += '<table style="height:100%;width:100%;text-align:center;">';
+			html += '<tr><td><div style="position:relative;display:inline-block;"><img class="fbphotobox-main-image" src=""/></div></td></tr></table>';
+			html += '<div class="fbphotobox-image-stage-overlay">';
+			html += '<div class="fbphotobox-container-left-header">';
+			html += '<a title="Full Screen" class="fbphotobox-fc-btn fbphotobox-a" style="background-image: url(./images/fullscreen.png);';
+			html +=	'background-repeat: no-repeat;background-size:auto;background-position: 0 0;display: block;width:18px;height:18px;"></a>';
+			html += '</div>';
+			html += '<div data-prev-index="" class="left-arrow">';
+			html += '<table style="height:100%">';
+			html += '<tr>';
+			html += '<td style="vertical-align:middle;">';
+			html += '<a class="fbphotobox-a" title="Previous" style="background-image: url(./images/Arrows-LWhite-icon.png);';
+			html += 'background-repeat: no-repeat;background-size:auto;background-position: 0px 0px;display: block;height: 48px;width: 48px;"></a>';
+			html += '</td>';
+			html += '</tr>';
+			html += '</table>';
+			html += '</div>';
+			html += '<div data-next-index="" class="right-arrow">';
+			html += '<table style="height:100%;">';
+			html += '<tr>';
+			html += '<td style="vertical-align:middle;">';
+			html += '<a class="fbphotobox-a" title="Next" style="background-image: url(./images/Arrows-RWhite-icon.png);background-repeat: no-repeat;background-size:auto;';
+			html += 'background-position: 0px 0px;display: block;height: 48px;width: 48px;"></a>';
+			html += '</td>';
+			html += '</tr>';
+			html += '</table>';
+			html += '</div>';
+			html += '<div class="fbphotobox-container-left-footer">';
+			html += '<div style="margin:20px;">';
+			html += '<span style="font-weight:bold;">Dummy Photo Caption</span>';
+			html += '<span style="color:#B3B3B3;"> in </span>';
+			html += '<span style="font-weight:bold;">Dummy Album Name</span>';
+			html += '</div>';
+			html += '</div>';
+			html += '<div class="fbphotobox-container-left-footer-bg"></div>';
+			html += '</div>';
+			html += '</div>';
+			html += '<div class="fbphotobox-container-right">';
+			html += '<div class="fbphotobox-close-btn">';
+			html += '<a title="Close" href="" style="float:right;margin:8px">';
+			html += '<img src="./images/close.png" style="height:10px;width:10px"/>';
+			html += '</a>';
+			html += '<div style="clear:both"></div>';
+			html += '</div>';
+			html += '<div class="fbphotobox-image-content" style="color:black;"></div>';
+			html += '</div>';
+			html += '<div style="clear:both"></div>';
+			html += '</div>';
+			html += '<div class="fbphotobox-fc-main-container">';
+			html += '<div class="fbphotobox-fc-header" style="position:fixed;left:0px;right:0px;top:0px;color:white;">';
+			html += '<div style="float:left">Dummy Header</div>';
+			html += '<a class="fbphotobox-fc-close-btn" href="" style="color: #FFFFFF;float: right;padding: 2px 10px;text-decoration: none;">Exit</a>';
+			html += '<div style="clear:both"></div>';
+			html += '</div>';
+			html += '<div style="position:fixed;top:0px;right:0px;left:0px;bottom:0px;margin:auto;">';
+			html += '<table style="width:100%;height:100%;text-align:center;">';
+			html += '<tr>';
+			html += '<td class="fc-left-arrow" style="width:50px;text-align:center;">';
+			html += '<a class="fbphotobox-a" title="Previous" style="background-image: url(./images/Arrows-LWhite-icon.png);';
+			html += 'float:left;background-repeat: no-repeat;background-size:auto;background-position: 0px 0px;height: 48px;width: 48px;"></a>';
+			html += '</td>';
+			html += '<td>';
+			html += '<img class="fbphotobox-fc-main-image" src=""/>';
+			html += '</td>';
+			html += '<td class="fc-right-arrow" style="width:50px;text-align:center;">';
+			html += '<a class="fbphotobox-a" title="Next" style="background-image: url(./images/Arrows-RWhite-icon.png);background-repeat: no-repeat;';
+			html += 'float:right;background-size:auto;background-position: 0px 0px;height: 48px;width: 48px;"></a>';
+			html += '</td>';
+			html += '</tr>';
+			html += '</table>';
+			html += '</div>';
+			html += '<div class="fbphotobox-fc-footer" style="position:fixed;left:0px;right:0px;bottom:0px;color:white;">';
+			html += 'Dummy Footer';
+			html += '<div style="clear:both"></div>';
+			html += '</div>';
+			html += '</div>';
+			html += '<div class="fbphotobox-overlay" style="display:none;"></div>';
+			html += '<div style="clear:both"></div>';
+			$("body").append(html);
 			this.settings.afterInitDOM();
 		},
 		
@@ -200,10 +281,6 @@
 			}
 		},
 		
-		addContent: function(content, image) {
-			$(".fbphotobox-image-content").html(content);
-		},
-		
 		refreshBoxSize: function(image) {
 			var isShow = true;
 			if (image == null) {
@@ -270,7 +347,7 @@
 		
 		refreshFullScreenSize: function() {
 			$(".fbphotobox-fc-main-image").css({
-				"max-width": window.innerWidth - $(".fc-left-arrow").width() - $(".fc-right-arrow").width(),
+				"max-width": window.innerWidth - $(".fc-left-arrow").width() - $(".fc-right-arrow").width() - 20,
 				"max-height": window.innerHeight - $(".fbphotobox-fc-header").outerHeight(true) - $(".fbphotobox-fc-footer").outerHeight(true)
 			});
 			$(".fbphotobox-fc-main-image").closest("div").css("height", window.innerHeight - $(".fbphotobox-fc-header").outerHeight(true) - $(".fbphotobox-fc-footer").outerHeight(true));
@@ -286,13 +363,13 @@
 			item.data('FBPhotoBox', new FBPhotoBox(this, options));
 		} else {
 			if(typeof options === 'string') {
-				instance[options].apply(instance, args);
+				return instance[options].apply(instance, args);
 			}
 		}
 	};
 	
 	$.fn.fbPhotoBox.defaults = {
-		rightWidth: 400,
+		rightWidth: 360,
 		minLeftWidth: 520,
 		minHeight: 520,
 		leftBgColor: "black",
@@ -303,6 +380,6 @@
 		onImageShow: function() {},
 		afterInitDOM: function() {},
 		imageOverlayFadeSpeed: 150,
-		normalModeMargin: 30
+		normalModeMargin: 40
 	};
 }(jQuery));
