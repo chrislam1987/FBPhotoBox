@@ -14,7 +14,7 @@ Please give a try and giving feedbacks to me, as this is my first personal proje
 
 Screen Capture:
 
-![] (https://github.com/chrislam1987/FBPhotoBox/blob/master/sample.png)
+![] (https://raw2.github.com/chrislam1987/FBPhotoBox/master/sample.png)
 
 External Resource Using:
 
