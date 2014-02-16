@@ -60,8 +60,10 @@
 			
 			$(".fbphotobox-container-left").hover(function() {
 				$(".fbphotobox-image-stage-overlay").fadeIn($this.settings.imageOverlayFadeSpeed);
+				$(".fbphotobox-tag").show();
 			}, function() {
 				$(".fbphotobox-image-stage-overlay").fadeOut($this.settings.imageOverlayFadeSpeed);
+				$(".fbphotobox-tag").hide();
 			});
 			
 			this.leftArrow.click(function() {
@@ -128,7 +130,7 @@
 			var html = '<div class="fbphotobox-main-container">';
 			html += '<div class="fbphotobox-container-left">';
 			html += '<table style="height:100%;width:100%;text-align:center;">';
-			html += '<tr><td><div style="position:relative;display:inline-block;"><img class="fbphotobox-main-image" src=""/></div></td></tr></table>';
+			html += '<tr><td><div style="position:relative;"><img class="fbphotobox-main-image" src=""/></div></td></tr></table>';
 			html += '<div class="fbphotobox-image-stage-overlay">';
 			html += '<div class="fbphotobox-container-left-header">';
 			html += '<a title="Full Screen" class="fbphotobox-fc-btn fbphotobox-a" style="background-image: url(./images/fullscreen.png);';
@@ -257,7 +259,7 @@
 		addTags: function(tagsCo) {
 			var imgHeight = $(".fbphotobox-main-image").height();
 			var imgWidth = $(".fbphotobox-main-image").width();
-			var tagNode = $( "<div></div>", {"class": "fbphotobox-tag"});
+			var tagNode = $(document.createElement('div')).attr("class", "fbphotobox-tag");
 			for (var i=0; i < tagsCo.length; i++) {
 				var tempNode = tagNode.clone();
 				tempNode.css({
@@ -277,7 +279,7 @@
 					tempNode.append(tipNode);
 					tipNode.html(tagsCo[i].text);
 				}
-				tempNode.insertAfter($(".fbphotobox-main-image"));
+				tempNode.appendTo($(".fbphotobox-main-image").closest("div"));
 			}
 		},
 		
@@ -290,8 +292,8 @@
 			
 			var imageWidth = image.width;
 			var imageHeight = image.height;
-			var maxWidth = Math.max(window.innerWidth - this.settings.rightWidth - this.settings.normalModeMargin*2, this.settings.minLeftWidth);
-			var maxHeight = Math.max(window.innerHeight - this.settings.normalModeMargin*2, this.settings.minHeight);
+			var maxWidth = Math.max($(window).width() - this.settings.rightWidth - this.settings.normalModeMargin*2, this.settings.minLeftWidth);
+			var maxHeight = Math.max($(window).height() - this.settings.normalModeMargin*2, this.settings.minHeight);
 			
 			if (imageHeight < maxHeight) {
 				$(".fbphotobox-container-left").height(imageHeight);
@@ -310,11 +312,6 @@
 				$(".fbphotobox-main-image").css("max-width",maxWidth);
 			}
 			
-			$(".fbphotobox-main-container").css({
-				width: ($(".fbphotobox-container-left").width() + $(".fbphotobox-container-right").width()),
-				height: $(".fbphotobox-container-left").height()
-			});
-			
 			if (isShow) {
 				$(".fbphotobox-main-image").attr("src", "").attr("src", image.src);
 				$(".fbphotobox-overlay").show();
@@ -324,6 +321,11 @@
 			
 			$(".fbphotobox-container-right").css("height", $(".fbphotobox-container-left").height());
 			$(".fbphotobox-image-content").css("height", $(".fbphotobox-container-left").height() - $(".fbphotobox-close-btn").height());
+			
+			$(".fbphotobox-main-container").css({
+				width: ($(".fbphotobox-container-left").width() + $(".fbphotobox-container-right").width()),
+				height: $(".fbphotobox-container-left").height()
+			});
 			
 			if (isShow) {
 				$(".fbphotobox-main-image").trigger("onFbBoxImageShow");
