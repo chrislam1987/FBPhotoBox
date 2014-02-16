@@ -116,15 +116,21 @@
 	width:100px;
 	border-radius:3px;
 	opacity: 1;
-	border:3px solid white;
-	box-shadow: 0px 0px 5px #333;
-	display: none;
-	opacity: 0.7;
 }
 
 .fbphotobox-tag div {
 	width:100%;
 	border-radius:none;
+	display: none;
+}
+
+.fbphotobox-tag:hover {
+	border:3px solid white;
+	box-shadow: 0px 0px 5px #333;
+}
+
+.fbphotobox-tag:hover div {
+	display: inline-block;
 	opacity: 1;
 }
 

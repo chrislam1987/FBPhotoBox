@@ -60,10 +60,8 @@
 			
 			$(".fbphotobox-container-left").hover(function() {
 				$(".fbphotobox-image-stage-overlay").fadeIn($this.settings.imageOverlayFadeSpeed);
-				$(".fbphotobox-tag").show();
 			}, function() {
 				$(".fbphotobox-image-stage-overlay").fadeOut($this.settings.imageOverlayFadeSpeed);
-				$(".fbphotobox-tag").hide();
 			});
 			
 			this.leftArrow.click(function() {
@@ -130,7 +128,7 @@
 			var html = '<div class="fbphotobox-main-container">';
 			html += '<div class="fbphotobox-container-left">';
 			html += '<table style="height:100%;width:100%;text-align:center;">';
-			html += '<tr><td><div style="position:relative;"><img class="fbphotobox-main-image" src=""/></div></td></tr></table>';
+			html += '<tr><td><div style="position:relative;display:inline-block;display:block\0;*display:block;"><img class="fbphotobox-main-image" src=""/></div></td></tr></table>';
 			html += '<div class="fbphotobox-image-stage-overlay">';
 			html += '<div class="fbphotobox-container-left-header">';
 			html += '<a title="Full Screen" class="fbphotobox-fc-btn fbphotobox-a" style="background-image: url(./images/fullscreen.png);';
@@ -173,7 +171,7 @@
 			html += '</a>';
 			html += '<div style="clear:both"></div>';
 			html += '</div>';
-			html += '<div class="fbphotobox-image-content" style="color:black;"></div>';
+			html += '<div class="fbphotobox-image-content" style="color:black;overflow:hidden;"></div>';
 			html += '</div>';
 			html += '<div style="clear:both"></div>';
 			html += '</div>';
@@ -312,13 +310,7 @@
 				$(".fbphotobox-main-image").css("max-width",maxWidth);
 			}
 			
-			if (isShow) {
-				$(".fbphotobox-main-image").attr("src", "").attr("src", image.src);
-				$(".fbphotobox-overlay").show();
-				$(".fbphotobox-main-container").show();
-				$(".fbphotobox-fc-main-image").attr("src","").attr("src", image.src);
-			}
-			
+						
 			$(".fbphotobox-container-right").css("height", $(".fbphotobox-container-left").height());
 			$(".fbphotobox-image-content").css("height", $(".fbphotobox-container-left").height() - $(".fbphotobox-close-btn").height());
 			
@@ -328,9 +320,14 @@
 			});
 			
 			if (isShow) {
-				$(".fbphotobox-main-image").trigger("onFbBoxImageShow");
+				$(".fbphotobox-main-image").attr("src", "").attr("src", image.src);
+				$(".fbphotobox-overlay").show();
+				$(".fbphotobox-main-container").show();
+				$(".fbphotobox-fc-main-image").attr("src","").attr("src", image.src);
+				setTimeout(function() {$(".fbphotobox-main-image").trigger("onFbBoxImageShow");},50);
 			}
-			this.refreshTagSize();
+
+			if (!isShow) this.refreshTagSize();
 		}, 
 		
 		refreshTagSize: function() {
