@@ -116,6 +116,7 @@
 	width:100px;
 	border-radius:3px;
 	opacity: 1;
+	background: rgba(0,0,0,0);
 }
 
 .fbphotobox-tag div {
@@ -181,7 +182,9 @@ table, tr, td {
 }
 
 .fbphotobox-main-image-table .tag-container {
-	position:relative;display:inline-block;display:block\0;*display:block;
+	position:relative;
+	display:inline-block;
+	*display:block;
 }
 
 .left-arrow .fbphotobox-a {
