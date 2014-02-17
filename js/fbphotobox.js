@@ -2,10 +2,11 @@
 	function FBPhotoBox(item, opts) {
 		this.settings = $.extend({}, $.fn.fbPhotoBox.defaults, opts);
 		this.targetObj = item;
+		this.tempImage = new Image();
 		this.fullScreenMode = false;
 		this.rightArrow = null;
 		this.leftArrow = null;
-		this.tempImage = new Image();
+		this.mainImage = null;
 		this.init();
 	}
 	
@@ -16,22 +17,19 @@
 			this.initSettings();
 			this.rightArrow = $(".right-arrow");
 			this.leftArrow = $(".left-arrow");
+			this.mainImage = $(".fbphotobox-main-image");
+			
 			this.tempImage.onload = function() { $this.refreshBoxSize(this); }
+			
 			$(window).resize(function() {
 				$this.refreshBoxSize();
 				$this.refreshFullScreenSize();
-				if(navigator.appVersion.indexOf("MSIE 7.") != -1)
-				{
-					$this.repositionBox();
-				}
+				if(navigator.appVersion.indexOf("MSIE 7.") != -1) { $this.repositionBox(); }
 			});
 			
-			this.targetObj.click(function() {
-				var image = $(this);
-				$this.show(image);
-			});
+			this.targetObj.click(function() { $this.show($(this)); });
 			
-			$(".fbphotobox-main-image").bind("onFbBoxImageShow", this.settings.onImageShow);
+			this.mainImage.bind("onFbBoxImageShow", this.settings.onImageShow);
 
 			$(".fbphotobox-a").hover(function() {
 				$(this).fadeTo("fast", 1);
@@ -47,7 +45,7 @@
 			
 			$(".fbphotobox-fc-btn").click(function() {
 				$this.fullScreenMode = true;
-				$this.showFullScreen($(".fbphotobox-main-image"));
+				$this.showFullScreen($this.mainImage);
 				return false;
 			});
 			
@@ -56,13 +54,9 @@
 				return false;
 			});
 			
-			$(".fbphotobox-main-image").click(function() {
+			this.mainImage.click(function() {
 				$this.rightArrow.click();
 				return false;
-			});
-			
-			$(".fbphotobox-tag").on("hover", function() {
-				alert("here");
 			});
 			
 			$(".fbphotobox-main-image-dummy").load(function() {
@@ -77,28 +71,24 @@
 			
 			this.leftArrow.click(function() {
 				var image = $this.targetObj.get($this.leftArrow.attr("data-prev-index"));
-				if (image) {
-					$this.show($(image));
-				}
+				if (image) $this.show($(image));
 			});
 			
 			this.rightArrow.click(function() {
 				var image = $this.targetObj.get($this.rightArrow.attr("data-next-index"));
-				if (image) {
-					$this.show($(image));
-				}
+				if (image) $this.show($(image));
 			});
 			// End of Normal Mode Binding //
 			
 			// Start of FullScreen Mode Binding //
 			$(".fc-left-arrow .fbphotobox-a").click(function() {
 				$this.leftArrow.click();
-				$this.showFullScreen($(".fbphotobox-main-image"));
+				$this.showFullScreen($this.mainImage);
 			});
 			
 			$(".fc-right-arrow .fbphotobox-a").click(function() {
 				$this.rightArrow.click();
-				$this.showFullScreen($(".fbphotobox-main-image"));
+				$this.showFullScreen($this.mainImage);
 			});
 			
 			$(".fbphotobox-fc-close-btn").click(function() {
@@ -136,99 +126,79 @@
 		},
 		
 		initDOM: function() {
-			var html = '<div class="fbphotobox-main-container">';
-			html += '<div class="fbphotobox-container-left">';
-			html += '<table style="height:100%;width:100%;text-align:center;table-layout:fixed">';
-			html += '<tr><td><div style="position:relative;display:inline-block;display:block\0;*display:block;"><img class="fbphotobox-main-image" src=""/></div></td></tr></table>';
-			html += '<div class="fbphotobox-image-stage-overlay">';
-			html += '<div class="fbphotobox-container-left-header">';
-			html += '<a title="Full Screen" class="fbphotobox-fc-btn fbphotobox-a" style="background-image: url(./images/fullscreen.png);';
-			html +=	'background-repeat: no-repeat;background-size:auto;background-position: 0 0;display: block;width:18px;height:18px;"></a>';
-			html += '</div>';
-			html += '<div data-prev-index="" class="left-arrow">';
-			html += '<table style="height:100%">';
-			html += '<tr>';
-			html += '<td style="vertical-align:middle;">';
-			html += '<a class="fbphotobox-a" title="Previous" style="background-image: url(./images/Arrows-LWhite-icon.png);';
-			html += 'background-repeat: no-repeat;background-size:auto;background-position: 0px 0px;display: block;height: 48px;width: 48px;"></a>';
-			html += '</td>';
-			html += '</tr>';
-			html += '</table>';
-			html += '</div>';
-			html += '<div data-next-index="" class="right-arrow">';
-			html += '<table style="height:100%;">';
-			html += '<tr>';
-			html += '<td style="vertical-align:middle;">';
-			html += '<a class="fbphotobox-a" title="Next" style="background-image: url(./images/Arrows-RWhite-icon.png);background-repeat: no-repeat;background-size:auto;';
-			html += 'background-position: 0px 0px;display: block;height: 48px;width: 48px;"></a>';
-			html += '</td>';
-			html += '</tr>';
-			html += '</table>';
-			html += '</div>';
-			html += '<div class="fbphotobox-container-left-footer">';
-			html += '<div style="margin:20px;">';
-			html += '<span style="font-weight:bold;">Dummy Photo Caption</span>';
-			html += '<span style="color:#B3B3B3;"> in </span>';
-			html += '<span style="font-weight:bold;">Dummy Album Name</span>';
-			html += '</div>';
-			html += '</div>';
-			html += '<div class="fbphotobox-container-left-footer-bg"></div>';
-			html += '</div>';
-			html += '</div>';
-			html += '<div class="fbphotobox-container-right">';
-			html += '<div class="fbphotobox-close-btn">';
-			html += '<a title="Close" href="" style="float:right;margin:8px">';
-			html += '<img src="./images/close.png" style="height:10px;width:10px"/>';
-			html += '</a>';
-			html += '<div style="clear:both"></div>';
-			html += '</div>';
-			html += '<div class="fbphotobox-image-content" style="color:black;overflow:hidden;"></div>';
-			html += '</div>';
-			html += '<div style="clear:both"></div>';
-			html += '</div>';
-			html += '<div class="fbphotobox-fc-main-container">';
-			html += '<div class="fbphotobox-fc-header" style="position:fixed;left:0px;right:0px;top:0px;color:white;">';
-			html += '<div style="float:left">Dummy Header</div>';
-			html += '<a class="fbphotobox-fc-close-btn" href="" style="color: #FFFFFF;float: right;padding: 2px 10px;text-decoration: none;">Exit</a>';
-			html += '<div style="clear:both"></div>';
-			html += '</div>';
-			html += '<div style="position:fixed;top:0px;right:0px;left:0px;bottom:0px;margin:auto;">';
-			html += '<table style="width:100%;height:100%;text-align:center;">';
-			html += '<tr>';
-			html += '<td class="fc-left-arrow" style="width:50px;text-align:center;">';
-			html += '<a class="fbphotobox-a" title="Previous" style="background-image: url(./images/Arrows-LWhite-icon.png);';
-			html += 'float:left;background-repeat: no-repeat;background-size:auto;background-position: 0px 0px;height: 48px;width: 48px;"></a>';
-			html += '</td>';
-			html += '<td>';
-			html += '<img class="fbphotobox-fc-main-image" src=""/>';
-			html += '</td>';
-			html += '<td class="fc-right-arrow" style="width:50px;text-align:center;">';
-			html += '<a class="fbphotobox-a" title="Next" style="background-image: url(./images/Arrows-RWhite-icon.png);background-repeat: no-repeat;';
-			html += 'float:right;background-size:auto;background-position: 0px 0px;height: 48px;width: 48px;"></a>';
-			html += '</td>';
-			html += '</tr>';
-			html += '</table>';
-			html += '</div>';
-			html += '<div class="fbphotobox-fc-footer" style="position:fixed;left:0px;right:0px;bottom:0px;color:white;">';
-			html += 'Dummy Footer';
-			html += '<div style="clear:both"></div>';
-			html += '</div>';
-			html += '</div>';
-			html += '<div class="fbphotobox-overlay" style="display:none;"></div>';
-			html += '<div style="clear:both"></div>';
-			$("body").append(html);
+			var html = ['<div class="fbphotobox-main-container">',
+					'<div class="fbphotobox-container-left">',
+						'<table class="fbphotobox-main-image-table"><tr><td>',
+							'<div class="tag-container"><img class="fbphotobox-main-image" src=""/></div>',
+						'</td></tr></table>',
+						'<div class="fbphotobox-image-stage-overlay">',
+							'<div class="fbphotobox-container-left-header">',
+								'<a title="Full Screen" class="fbphotobox-fc-btn fbphotobox-a"></a>',
+							'</div>',
+							'<div data-prev-index="" class="left-arrow">',
+								'<table style="height:100%"><tr><td style="vertical-align:middle;">',
+									'<a class="fbphotobox-a" title="Previous"></a>',
+								'</td></tr></table>',
+							'</div>',
+							'<div data-next-index="" class="right-arrow">',
+								'<table style="height:100%;"><tr><td style="vertical-align:middle;">',
+									'<a class="fbphotobox-a" title="Next"></a>',
+								'</td></tr></table>',
+							'</div>',
+							'<div class="fbphotobox-container-left-footer">',
+								'<div style="margin:20px;">',
+									'<span style="font-weight:bold;">Dummy Photo Caption</span>',
+									'<span style="color:#B3B3B3;"> in </span>',
+									'<span style="font-weight:bold;">Dummy Album Name</span>',
+								'</div>',
+							'</div>',
+							'<div class="fbphotobox-container-left-footer-bg"></div>',
+						'</div>',
+					'</div>',
+					'<div class="fbphotobox-container-right">',
+						'<div class="fbphotobox-close-btn">',
+							'<a title="Close" href="" style="float:right;margin:8px">',
+								'<img src="./images/close.png" style="height:10px;width:10px"/>',
+							'</a>',
+							'<div style="clear:both"></div>',
+						'</div>',
+						'<div class="fbphotobox-image-content"></div>',
+					'</div>',
+					'<div style="clear:both"></div>',
+				'</div>',
+				'<div class="fbphotobox-fc-main-container">',
+					'<div class="fbphotobox-fc-header">',
+						'<div style="float:left">Dummy Header</div>',
+						'<a class="fbphotobox-fc-close-btn" href="">Exit</a>',
+						'<div style="clear:both"></div>',
+					'</div>',
+					'<div style="position:fixed;top:0px;right:0px;left:0px;bottom:0px;margin:auto;">',
+						'<table style="width:100%;height:100%;text-align:center;">',
+							'<tr>',
+								'<td class="fc-left-arrow" style="width:50px;text-align:center;">',
+									'<a class="fbphotobox-a" title="Previous"></a>',
+								'</td>',
+								'<td>',
+									'<img class="fbphotobox-fc-main-image" src=""/>',
+								'</td>',
+								'<td class="fc-right-arrow" style="width:50px;text-align:center;">',
+									'<a class="fbphotobox-a" title="Next"></a>',
+								'</td>',
+							'</tr>',
+						'</table>',
+					'</div>',
+					'<div class="fbphotobox-fc-footer">Dummy Footer<div style="clear:both"></div></div>',
+				'</div>',
+				'<div class="fbphotobox-overlay"></div>',
+				'<div style="clear:both"></div>'];
+			$("body").append(html.join(""));
 			this.settings.afterInitDOM();
 		},
 		
 		show: function(image) {
-			if (image.attr("fbphotobox-src")) {
-				this.tempImage.src = image.attr("fbphotobox-src");
-	        }
-			else {
-				this.tempImage.src = image.attr("src");
-			}
-			var container = $(".fbphotobox-main-image").closest("div");
-			container.find(".fbphotobox-tag").remove();
+			if (image.attr("fbphotobox-src")) this.tempImage.src = image.attr("fbphotobox-src");
+			else this.tempImage.src = image.attr("src");
+			$(".fbphotobox-tag").remove();
 			var index = this.targetObj.index(image);
 			this.leftArrow.attr("data-prev-index", index-1);
 			this.rightArrow.attr("data-next-index", index+1);
@@ -236,24 +206,19 @@
 			else this.leftArrow.show();
 			if (index+1 >= this.targetObj.length) this.rightArrow.hide();
 			else this.rightArrow.show();
-			this.refreshTagSize();
 		},
 		
 		showFullScreen: function(image) {
 			$(".fbphotobox-fc-main-container").show();
-			if (this.leftArrow.css("display") == "none") {
-				$(".fc-left-arrow a").hide();
-			}
-			else {
-				$(".fc-left-arrow a").show();
-			}
-			if (this.rightArrow.css("display") == "none") {
-				$(".fc-right-arrow a").hide();
-			}
-			else {
-				$(".fc-right-arrow a").show();
-			}
+			if (this.leftArrow.css("display") == "none") $(".fc-left-arrow a").hide();
+			else $(".fc-left-arrow a").show();
+			if (this.rightArrow.css("display") == "none") $(".fc-right-arrow a").hide();
+			else $(".fc-right-arrow a").show();
 			this.refreshFullScreenSize();
+		},
+		
+		hideFullScreen: function() {
+			$(".fbphotobox-fc-main-container").hide();
 		},
 		
 		hide: function() {
@@ -261,13 +226,9 @@
 			$(".fbphotobox-main-container").hide();
 		},
 		
-		hideFullScreen: function() {
-			$(".fbphotobox-fc-main-container").hide();
-		},
-		
 		addTags: function(tagsCo) {
-			var imgHeight = $(".fbphotobox-main-image").height();
-			var imgWidth = $(".fbphotobox-main-image").width();
+			var imgHeight = this.mainImage.height();
+			var imgWidth = this.mainImage.width();
 			var tagNode = $(document.createElement('div')).attr("class", "fbphotobox-tag");
 			for (var i=0; i < tagsCo.length; i++) {
 				var tempNode = tagNode.clone();
@@ -289,59 +250,51 @@
 					tempNode.append(tipNode);
 					tipNode.html(tagsCo[i].text);
 				}
-				tempNode.appendTo($(".fbphotobox-main-image").closest("div"));
+				tempNode.appendTo(this.mainImage.closest("div"));
 			}
 		},
 		
 		refreshBoxSize: function(image) {
-			var isShow = true;
-			if (image == null) {
-				image = this.tempImage;
-				isShow = false;
-			}
-			
+			var isShow = image == null? false : true;
+			image = image == null? this.tempImage : image;
+			var leftContainer = $(".fbphotobox-container-left");
+			var rightContainer = $(".fbphotobox-container-right");
 			var imageWidth = image.width;
 			var imageHeight = image.height;
 			var maxWidth = Math.max($(window).width() - this.settings.rightWidth - this.settings.normalModeMargin*2, this.settings.minLeftWidth);
 			var maxHeight = Math.max($(window).height() - this.settings.normalModeMargin*2, this.settings.minHeight);
 			
 			if (imageHeight < maxHeight) {
-				$(".fbphotobox-container-left").height(imageHeight);
-				$(".fbphotobox-main-image").css("max-height",imageHeight);
+				leftContainer.height(imageHeight);
+				this.mainImage.css("max-height",imageHeight);
 			}
 			else {
-				$(".fbphotobox-container-left").height(maxHeight);
-				$(".fbphotobox-main-image").css("max-height",maxHeight);
+				leftContainer.height(maxHeight);
+				this.mainImage.css("max-height",maxHeight);
 			}
 			if (imageWidth < maxWidth) {
-				$(".fbphotobox-container-left").width(imageWidth);
-				$(".fbphotobox-main-image").css("max-width",imageWidth);
+				leftContainer.width(imageWidth);
+				this.mainImage.css("max-width",imageWidth);
 			}
 			else {
-				$(".fbphotobox-container-left").width(maxWidth);
-				$(".fbphotobox-main-image").css("max-width",maxWidth);
+				leftContainer.width(maxWidth);
+				this.mainImage.css("max-width",maxWidth);
 			}
-			
 						
-			$(".fbphotobox-container-right").css("height", $(".fbphotobox-container-left").height());
-			$(".fbphotobox-image-content").css("height", $(".fbphotobox-container-left").height() - $(".fbphotobox-close-btn").height());
+			rightContainer.css("height", leftContainer.height());
+			$(".fbphotobox-image-content").css("height", leftContainer.height() - $(".fbphotobox-close-btn").height());
 			
 			$(".fbphotobox-main-container").css({
-				width: ($(".fbphotobox-container-left").width() + $(".fbphotobox-container-right").width()),
-				height: $(".fbphotobox-container-left").height()
+				width: (leftContainer.width() + rightContainer.width()),
+				height: leftContainer.height()
 			});
 			
 			if (isShow) {
-				if(navigator.appVersion.indexOf("MSIE 7.") != -1)
-				{
-					this.repositionBox();
-				}
-				$(".fbphotobox-main-image").attr("src", "").hide().attr("src", image.src);
+				if(navigator.appVersion.indexOf("MSIE 7.") != -1) this.repositionBox();
+				this.mainImage.hide().attr("src", "").attr("src", image.src);
 				$(".fbphotobox-overlay").show();
 				$(".fbphotobox-main-container").show();
-				$(".fbphotobox-main-image").show(100, function() {
-					$(".fbphotobox-main-image").trigger("onFbBoxImageShow");
-				});
+				this.mainImage.show(10, function() { $(this).trigger("onFbBoxImageShow"); });
 				$(".fbphotobox-fc-main-image").attr("src","").attr("src", image.src);
 			}
 
@@ -349,9 +302,9 @@
 		}, 
 		
 		refreshTagSize: function() {
-			var $tag = $(".fbphotobox-main-image").closest("div").find(".fbphotobox-tag");
-			var newHeight = $(".fbphotobox-main-image").height();
-			var newWidth = $(".fbphotobox-main-image").width();
+			var $tag = $(".fbphotobox-tag");
+			var newHeight = this.mainImage.height();
+			var newWidth = this.mainImage.width();
 			$tag.each(function() {
 				$(this).css({
 					left: $(this).attr("x")*newWidth,
@@ -364,15 +317,16 @@
 		
 		refreshFullScreenSize: function() {
 			$(".fbphotobox-fc-main-image").css({
-				"max-width": window.innerWidth - $(".fc-left-arrow").width() - $(".fc-right-arrow").width() - 20,
-				"max-height": window.innerHeight - $(".fbphotobox-fc-header").outerHeight(true) - $(".fbphotobox-fc-footer").outerHeight(true)
+				"max-width": $(window).width() - $(".fc-left-arrow").width() - $(".fc-right-arrow").width() - 20,
+				"max-height": $(window).height() - $(".fbphotobox-fc-header").outerHeight(true) - $(".fbphotobox-fc-footer").outerHeight(true)
 			});
-			$(".fbphotobox-fc-main-image").closest("div").css("height", window.innerHeight - $(".fbphotobox-fc-header").outerHeight(true) - $(".fbphotobox-fc-footer").outerHeight(true));
+			$(".fbphotobox-fc-main-image").closest("div").css("height", $(window).height() - $(".fbphotobox-fc-header").outerHeight(true) - $(".fbphotobox-fc-footer").outerHeight(true));
 		},
 		
 		repositionBox: function() {
-			var left = ($(window).width() - $(".fbphotobox-main-container").width())/2;
-			var top = ($(window).height() - $(".fbphotobox-main-container").height())/2;
+			var container = $(".fbphotobox-main-container");
+			var left = ($(window).width() - container.width())/2;
+			var top = ($(window).height() - container.height())/2;
 			$(".fbphotobox-main-container").css({left: left, top: top});
 		}
 	};
