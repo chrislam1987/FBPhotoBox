@@ -7,6 +7,7 @@
 		this.rightArrow = null;
 		this.leftArrow = null;
 		this.mainImage = null;
+		this.bodyDimension = {width:0,height:0};
 		this.init();
 	}
 	
@@ -18,7 +19,8 @@
 			this.rightArrow = $(".right-arrow");
 			this.leftArrow = $(".left-arrow");
 			this.mainImage = $(".fbphotobox-main-image");
-			
+			this.bodyDimension.width = $('body').width();
+			this.bodyDimension.height = $('body').height();
 			this.tempImage.onload = function() { $this.refreshBoxSize(this); }
 			
 			$(window).resize(function() {
@@ -224,6 +226,7 @@
 		hide: function() {
 			$(".fbphotobox-overlay").hide();
 			$(".fbphotobox-main-container").hide();
+			this.displayScroll();
 		},
 		
 		addTags: function(tagsCo) {
@@ -263,6 +266,8 @@
 			var imageHeight = image.height;
 			var maxWidth = Math.max($(window).width() - this.settings.rightWidth - this.settings.normalModeMargin*2, this.settings.minLeftWidth);
 			var maxHeight = Math.max($(window).height() - this.settings.normalModeMargin*2, this.settings.minHeight);
+			
+			this.hideScroll();
 			
 			if (imageHeight < maxHeight) {
 				leftContainer.height(imageHeight);
@@ -328,6 +333,14 @@
 			var left = ($(window).width() - container.width())/2;
 			var top = ($(window).height() - container.height())/2;
 			$(".fbphotobox-main-container").css({left: left, top: top});
+		},
+		
+		hideScroll: function() {
+			$('body').css({width:$(window).width(),height:$(window).height(), overflow:"hidden"});
+		},
+		
+		displayScroll: function() {
+			$('body').css({width:this.bodyDimension.width, height:this.bodyDimension.height, overflow:"scroll"});
 		}
 	};
 		
