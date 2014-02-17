@@ -42,7 +42,6 @@
 .fbphotobox-container-left {
 	float: left;
 	position: relative;
-	border-
 }
 
 .fbphotobox-container-left:hover {
@@ -116,7 +115,7 @@
 	width:100px;
 	border-radius:3px;
 	opacity: 1;
-	background: rgba(0,0,0,0);
+	background-image: url(../images/transparent.png);
 }
 
 .fbphotobox-tag div {
@@ -184,7 +183,7 @@ table, tr, td {
 .fbphotobox-main-image-table .tag-container {
 	position:relative;
 	display:inline-block;
-	*display:block;
+	*display:inline;
 }
 
 .left-arrow .fbphotobox-a {
