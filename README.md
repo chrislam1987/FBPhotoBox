@@ -22,3 +22,5 @@ External Resource Using:
 ICON: http://flaticons.net/
 
 Dummy Image: http://dummy-image-generator.com/
+
+Thank you
