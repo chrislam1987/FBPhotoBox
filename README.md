@@ -26,4 +26,5 @@ Dummy Image: http://dummy-image-generator.com/
 Thank you
 
 Update:
+
 12 March 2014 - This period of time is quite busy so have no time to improve this jquery plugin, I am thinking of enhance the UI of this photobox, if have any idea feel free to give comment
