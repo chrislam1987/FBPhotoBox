@@ -19,7 +19,7 @@
 				$(".fbphotobox img").fbPhotoBox("addTags",
 						[{x:0.3,y:0.3,w:0.3,h:0.3}]
 				);
-				$(".fbphotobox-image-content").html('<div style="font-size:16px;">Testing Content</div>'+$(this).attr("src"));
+				$(".fbphotobox-image-content").html('<div style="font-size:16px;">'+$(this).attr("alt").+'</div>'+$(this).attr("src"));
 			}
 		});
 	});
@@ -39,7 +39,7 @@
 </head>
 <body>
 	<div class="fbphotobox">
-		<img fbphotobox-src="./images/dummy-120x600-Glass.jpg" src="./images/dummy-120x600-Glass.jpg"/>
+		<img fbphotobox-src="./images/dummy-120x600-Glass.jpg" alt="Dummmy Image<br>Very Coool!" src="./images/dummy-120x600-Glass.jpg"/>
 		<img fbphotobox-src="./images/dummy-400x600-DesiccationCracks.jpg" src="./images/dummy-400x600-DesiccationCracks.jpg"/>
 		<img fbphotobox-src="./images/dummy-760x428-Menu.jpg" src="./images/dummy-760x428-Menu.jpg"/>
 		<img fbphotobox-src="./images/dummy-800x1200-Floral.jpg" src="./images/dummy-800x1200-Floral.jpg"/>
