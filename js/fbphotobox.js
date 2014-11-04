@@ -198,6 +198,7 @@
 		},
 		
 		show: function(image) {
+			this.mainImage.attr('alt', image.attr('alt')); //<-- Modal Info Value
 			if (image.attr("fbphotobox-src")) this.tempImage.src = image.attr("fbphotobox-src");
 			else this.tempImage.src = image.attr("src");
 			$(".fbphotobox-tag").remove();
