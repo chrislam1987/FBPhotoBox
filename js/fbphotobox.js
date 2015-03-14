@@ -208,6 +208,9 @@
 			else this.leftArrow.show();
 			if (index+1 >= this.targetObj.length) this.rightArrow.hide();
 			else this.rightArrow.show();
+			$(".fbphotobox-overlay").show();
+			$(".fbphotobox-main-container").show();
+			this.mainImage.trigger("onFbBoxImageShow");
 		},
 		
 		showFullScreen: function(image) {
