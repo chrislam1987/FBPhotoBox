@@ -5,6 +5,7 @@
 		this.bodyDimension.width = $('body').width();
 		this.bodyDimension.height = $('body').height();
 		this.container = $("." + this.settings.containerClassName);
+		this.IsDisplayed = false;
 		this.init();
 	}
 	
@@ -80,6 +81,11 @@
 				$this.hideFullScreen();
 				return false;
 			});
+			
+			// Bind the window resize callback
+			$(window).resize(function() {
+				$this.refreshBoxSize();
+			});
 		},
 		show: function(image) {
 			$(".fbphotobox-tag").remove();
@@ -88,6 +94,10 @@
 			this.leftArrow.attr("data-prev-index", index - 1);
 			this.rightArrow.attr("data-next-index", index + 1);
 			this.fbpMainImage.attr('alt', image.attr('alt'));
+			this.lazyLoadImage.posX = image.offset().left - parseInt($("body").css("margin-left"));
+			this.lazyLoadImage.posY = image.offset().top - parseInt($("body").css("margin-top"));
+			this.lazyLoadImage.widthSrc = image.width();
+			this.lazyLoadImage.heightSrc = image.height();
 			if (image.attr("fbphotobox-src")) {
 				this.lazyLoadImage.src = image.attr("fbphotobox-src");
 			}
@@ -96,6 +106,7 @@
 			}
 		},
 		hide: function() {
+			this.IsDisplayed = false;
 			this.lazyLoadImage.src = '';
 			this.fbpMainContainer.hide();
 			this.fbpOverlay.hide();
@@ -237,12 +248,38 @@
 				height: leftContainer.height()
 			});
 			if (isShow) {
-				if(navigator.appVersion.indexOf("MSIE 7.") != -1) this.repositionBox();
-				this.fbpMainImage.hide().attr("src", "").attr("src", image.src);
-				$(".fbphotobox-overlay").show();
-				$(".fbphotobox-main-container").show();
-				this.fbpMainImage.show(10, function() { $(this).trigger("onFbBoxImageShow"); });
+				this.fbpMainImage.attr("src", "").attr("src", image.src);
 				$(".fbphotobox-fc-main-image").attr("src","").attr("src", image.src);
+				if (!this.IsDisplayed)
+				{
+					if (navigator.appVersion.indexOf("MSIE 7.") != -1) this.repositionBox();
+					$(".fbphotobox-overlay").css("opacity",0).show();
+					$(".fbphotobox-main-container").css("opacity",0).show();
+					var imageNode = $(document.createElement('img')).attr("src", image.src).css({
+						top: image.posY,
+						left: image.posX,
+						width: image.widthSrc,
+						height: image.heightSrc,
+						position: 'absolute',
+						zIndex:999
+					});
+					$("body").append(imageNode);
+					imageNode.animate({
+						top: this.fbpMainImage.offset().top - parseInt($("body").css("margin-top")),
+						left: this.fbpMainImage.offset().left - parseInt($("body").css("margin-left")),
+						width: this.fbpMainImage.width(),
+						height: this.fbpMainImage.height()
+					},200,'swing',function() {
+						$(".fbphotobox-overlay").fadeTo("fast",1);
+						$(".fbphotobox-main-container").fadeTo("fast",1);
+						$(this).fadeOut("slow");
+					});
+					this.IsDisplayed = true;
+				}
+				
+				this.fbpMainImage.show(100, function() { $(this).trigger("onFbBoxImageShow"); });
+				
+				//handle left right arrow
 				var index = parseInt(this.fbpMainImage.attr('fbp-index'));
 				if (index - 1 < 0) {
 					this.leftArrow.hide();
