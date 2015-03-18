@@ -112,9 +112,9 @@
 			var from = { posX: this.fbpMainImage.offset().left, posY: this.fbpMainImage.offset().top, widthSrc: this.fbpMainImage.width(), heightSrc: this.fbpMainImage.height()};
 			var to = { posX: this.fbpMainImage.posX, posY: this.fbpMainImage.posY, widthSrc: this.fbpMainImage.widthSrc, heightSrc:this.fbpMainImage.heightSrc};
 			var tmpNode = $('<img src=""/>').attr("src", this.fbpMainImage.attr("src"));
-			this.fbpMainContainer.hide();
-			this.fbpOverlay.hide();
-			this.photoTransitionAnimation(tmpNode, from, to, function() {});
+			this.fbpMainContainer.fadeOut({easing:'easeOutQuint', queue:false, duration:200});
+			this.fbpOverlay.hide({easing:'easeOutQuint', queue:false, duration:200});
+			this.photoTransitionAnimation(tmpNode, from, to, function() { tmpNode.remove(); });
 			this.displayScroll();
 		},
 		initDOM: function() {
@@ -263,8 +263,12 @@
 					var to = { posX: this.fbpMainImage.offset().left, posY: this.fbpMainImage.offset().top, widthSrc: this.fbpMainImage.width(), heightSrc: this.fbpMainImage.height()};
 					var tmpNode = $('<img src=""/>').attr("src", image.src);
 					this.photoTransitionAnimation(tmpNode, from, to, function() {
-						$(".fbphotobox-overlay").animate({opacity: 0.9}, {queue: false, duration: 100});
-						$(".fbphotobox-main-container").animate({opacity: 1}, {queue: false, duration: 100});
+						$(".fbphotobox-overlay").animate({opacity: 0.9}, {easing: 'easeOutQuint', queue: false, duration: 500});
+						$(".fbphotobox-main-container").animate({opacity: 1}, {easing: 'easeOutQuint', queue: false, duration: 500,
+						complete: function() {
+							tmpNode.remove();
+						}
+						});
 					});
 					this.IsDisplayed = true;
 				}
@@ -372,9 +376,8 @@
 				left: leftTo,
 				width: to.widthSrc,
 				height: to.heightSrc
-			}, {duration:150, easing:'linear', complete: function() {
+			}, {duration:500, easing:'easeInOutCubic', complete: function() {
 				callbackFunc();
-				$(this).fadeOut({queue:false, duration: 'fast'});
 			}, queue:false});
 		}
 	};

@@ -4,8 +4,10 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title>FBPhotoBox Demo</title>
-<link href="./css/fbphotobox.css" rel="stylesheet" type="text/css" />
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.3/themes/smoothness/jquery-ui.css" />
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.3/jquery-ui.min.js"></script>
+<link href="./css/fbphotobox.css" rel="stylesheet" type="text/css" />
 <script src="./js/fbphotobox.js"></script>
 <script>
 	$(document).ready(function() {
@@ -38,23 +40,32 @@
 	}
 	
 	.fbphotobox img {
-		max-width: 400px;
-		max-height: 400px;
+		width:200px;
+		height:200px;
+		margin:10px;
+		border-radius:5px;
+	}
+	
+	.fbphotobox img:hover {
+		box-sizing:border-box;
+		  -moz-box-sizing:border-box;
+		  -webkit-box-sizing:border-box;
+		border: 5px solid #4AE;
 	}
 </style>
 </head>
 <body>
 	<div class="fbphotobox">
-		<img class="photo" fbphotobox-src="./images/dummy-120x600-Glass.jpg" alt="Dummmy Image<br>Very Coool!" src="./images/dummy-120x600-Glass.jpg"/>
-		<img class="photo" fbphotobox-src="./images/dummy-400x600-DesiccationCracks.jpg" src="./images/dummy-400x600-DesiccationCracks.jpg"/>
-		<img class="photo" fbphotobox-src="./images/dummy-760x428-Menu.jpg" src="./images/dummy-760x428-Menu.jpg"/>
-		<img class="photo" fbphotobox-src="./images/dummy-800x1200-Floral.jpg" src="./images/dummy-800x1200-Floral.jpg"/>
-		<img class="photo" fbphotobox-src="./images/dummy-960x1280-Comb.jpg" src="./images/dummy-960x1280-Comb.jpg"/>
-		<img class="photo" fbphotobox-src="./images/dummy-1080x1620-Bottles.jpg" src="./images/dummy-1080x1620-Bottles.jpg"/>
-		<img class="photo" fbphotobox-src="./images/dummy-1280x1920-Map.jpg" src="./images/dummy-1280x1920-Map.jpg"/>
-		<img class="photo" fbphotobox-src="./images/dummy-1752x1168-RedDots.jpg" src="./images/dummy-1752x1168-RedDots.jpg"/>
-		<img class="photo" fbphotobox-src="./images/dummy-1760x990-Mosque.jpg" src="./images/dummy-1760x990-Mosque.jpg"/>
-		<img class="photo" fbphotobox-src="./images/dummy-1920x2560-Goemetry.jpg" src="./images/dummy-1920x2560-Goemetry.jpg"/>
+		<a><img class="photo" fbphotobox-src="./images/dummy-120x600-Glass.jpg" alt="Dummmy Image<br>Very Coool!" src="./images/dummy-120x600-Glass.jpg"/></a>
+		<a><img class="photo" fbphotobox-src="./images/dummy-400x600-DesiccationCracks.jpg" src="./images/dummy-400x600-DesiccationCracks.jpg"/></a>
+		<a><img class="photo" fbphotobox-src="./images/dummy-760x428-Menu.jpg" src="./images/dummy-760x428-Menu.jpg"/></a>
+		<a><img class="photo" fbphotobox-src="./images/dummy-800x1200-Floral.jpg" src="./images/dummy-800x1200-Floral.jpg"/></a>
+		<a><img class="photo" fbphotobox-src="./images/dummy-960x1280-Comb.jpg" src="./images/dummy-960x1280-Comb.jpg"/></a>
+		<a><img class="photo" fbphotobox-src="./images/dummy-1080x1620-Bottles.jpg" src="./images/dummy-1080x1620-Bottles.jpg"/></a>
+		<a><img class="photo" fbphotobox-src="./images/dummy-1280x1920-Map.jpg" src="./images/dummy-1280x1920-Map.jpg"/></a>
+		<a><img class="photo" fbphotobox-src="./images/dummy-1752x1168-RedDots.jpg" src="./images/dummy-1752x1168-RedDots.jpg"/></a>
+		<a><img class="photo" fbphotobox-src="./images/dummy-1760x990-Mosque.jpg" src="./images/dummy-1760x990-Mosque.jpg"/></a>
+		<a><img class="photo" fbphotobox-src="./images/dummy-1920x2560-Goemetry.jpg" src="./images/dummy-1920x2560-Goemetry.jpg"/></a>
 	</div>
 	<button>click to add more image</button>
 </body>
