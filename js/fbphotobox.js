@@ -6,6 +6,7 @@
 		this.bodyDimension.height = $('body').height();
 		this.container = $("." + this.settings.containerClassName);
 		this.IsDisplayed = false;
+		this.animateVelocity = 3;
 		this.init();
 	}
 	
@@ -94,10 +95,10 @@
 			this.leftArrow.attr("data-prev-index", index - 1);
 			this.rightArrow.attr("data-next-index", index + 1);
 			this.fbpMainImage.attr('alt', image.attr('alt'));
-			this.lazyLoadImage.posX = image.offset().left - parseInt($("body").css("margin-left"));
-			this.lazyLoadImage.posY = image.offset().top - parseInt($("body").css("margin-top"));
-			this.lazyLoadImage.widthSrc = image.width();
-			this.lazyLoadImage.heightSrc = image.height();
+			this.fbpMainImage.posX = image.offset().left;
+			this.fbpMainImage.posY = image.offset().top;
+			this.fbpMainImage.widthSrc = image.width();
+			this.fbpMainImage.heightSrc = image.height();
 			if (image.attr("fbphotobox-src")) {
 				this.lazyLoadImage.src = image.attr("fbphotobox-src");
 			}
@@ -108,8 +109,12 @@
 		hide: function() {
 			this.IsDisplayed = false;
 			this.lazyLoadImage.src = '';
+			var from = { posX: this.fbpMainImage.offset().left, posY: this.fbpMainImage.offset().top, widthSrc: this.fbpMainImage.width(), heightSrc: this.fbpMainImage.height()};
+			var to = { posX: this.fbpMainImage.posX, posY: this.fbpMainImage.posY, widthSrc: this.fbpMainImage.widthSrc, heightSrc:this.fbpMainImage.heightSrc};
+			var tmpNode = $('<img src=""/>').attr("src", this.fbpMainImage.attr("src"));
 			this.fbpMainContainer.hide();
 			this.fbpOverlay.hide();
+			this.photoTransitionAnimation(tmpNode, from, to, function() {});
 			this.displayScroll();
 		},
 		initDOM: function() {
@@ -221,7 +226,6 @@
 			var imageHeight = image.height;
 			var maxWidth = Math.max($(window).width() - this.settings.rightWidth - this.settings.normalModeMargin*2, this.settings.minLeftWidth);
 			var maxHeight = Math.max($(window).height() - this.settings.normalModeMargin*2, this.settings.minHeight);
-			this.hideScroll();
 			
 			if (imageHeight < maxHeight) {
 				leftContainer.height(imageHeight);
@@ -255,29 +259,17 @@
 					if (navigator.appVersion.indexOf("MSIE 7.") != -1) this.repositionBox();
 					$(".fbphotobox-overlay").css("opacity",0).show();
 					$(".fbphotobox-main-container").css("opacity",0).show();
-					var imageNode = $(document.createElement('img')).attr("src", image.src).css({
-						top: image.posY,
-						left: image.posX,
-						width: image.widthSrc,
-						height: image.heightSrc,
-						position: 'absolute',
-						zIndex:999
-					});
-					$("body").append(imageNode);
-					imageNode.animate({
-						top: this.fbpMainImage.offset().top - parseInt($("body").css("margin-top")),
-						left: this.fbpMainImage.offset().left - parseInt($("body").css("margin-left")),
-						width: this.fbpMainImage.width(),
-						height: this.fbpMainImage.height()
-					},200,'swing',function() {
-						$(".fbphotobox-overlay").fadeTo("fast",1);
-						$(".fbphotobox-main-container").fadeTo("fast",1);
-						$(this).fadeOut("slow");
+					var from = { posX: this.fbpMainImage.posX, posY: this.fbpMainImage.posY, widthSrc: this.fbpMainImage.widthSrc, heightSrc: this.fbpMainImage.heightSrc};
+					var to = { posX: this.fbpMainImage.offset().left, posY: this.fbpMainImage.offset().top, widthSrc: this.fbpMainImage.width(), heightSrc: this.fbpMainImage.height()};
+					var tmpNode = $('<img src=""/>').attr("src", image.src);
+					this.photoTransitionAnimation(tmpNode, from, to, function() {
+						$(".fbphotobox-overlay").animate({opacity: 0.9}, {queue: false, duration: 100});
+						$(".fbphotobox-main-container").animate({opacity: 1}, {queue: false, duration: 100});
 					});
 					this.IsDisplayed = true;
 				}
 				
-				this.fbpMainImage.show(100, function() { $(this).trigger("onFbBoxImageShow"); });
+				this.fbpMainImage.show(10000, function() { $(this).trigger("onFbBoxImageShow"); });
 				
 				//handle left right arrow
 				var index = parseInt(this.fbpMainImage.attr('fbp-index'));
@@ -298,6 +290,7 @@
 					$(".fc-right-arrow a").show();
 				}
 			}
+			
 			if (!isShow) this.refreshTagSize();
 		},
 		refreshTagSize: function() {
@@ -345,11 +338,11 @@
 					w: tagsCo[i].w,
 					h: tagsCo[i].h
 				});
-				if (true || tagsCo[i].text) {
+				/*if (true || tagsCo[i].text) {
 					var tipNode = $('<div style="background-color:white;">hello</div>');
 					tempNode.append(tipNode);
 					tipNode.html(tagsCo[i].text);
-				}
+				}*/
 				tempNode.appendTo(this.fbpMainImage.closest("div"));
 			}
 		},
@@ -360,6 +353,30 @@
 		hideFullScreen: function() {
 			$(".fbphotobox-fc-main-container").hide();
 		},
+		photoTransitionAnimation: function(image, from, to, callbackFunc) {
+			var leftFrom = from.posX - parseInt($("body").css("margin-left"));
+			var topFrom = from.posY - parseInt($("body").css("margin-top"));
+			var leftTo = to.posX - parseInt($("body").css("margin-left"));
+			var topTo = to.posY - parseInt($("body").css("margin-top"));
+			image.css({
+				top: topFrom,
+				left: leftFrom,
+				width: from.widthSrc,
+				height: from.heightSrc,
+				position: 'absolute',
+				zIndex:999
+			});
+			$("body").append(image);
+			image.animate({
+				top: topTo,
+				left: leftTo,
+				width: to.widthSrc,
+				height: to.heightSrc
+			}, {duration:150, easing:'linear', complete: function() {
+				callbackFunc();
+				$(this).fadeOut({queue:false, duration: 'fast'});
+			}, queue:false});
+		}
 	};
 		
 	$.fn.fbPhotoBox = function(options) {
@@ -383,7 +400,7 @@
 		rightBgColor: "white",
 		footerBgColor: "black",
 		overlayBgColor: "black",
-		overlayBgOpacity: 0.96,
+		overlayBgOpacity: 0.5,
 		onImageShow: function() {},
 		afterInitDOM: function() {},
 		imageOverlayFadeSpeed: 150,

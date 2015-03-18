@@ -8,6 +8,11 @@
 	top: 0px;
 	right: 0px;
 	bottom: 0px;
+	filter:blur(4px);
+  -o-filter:blur(4px);
+  -ms-filter:blur(4px);
+  -moz-filter:blur(4px);
+  -webkit-filter:blur(4px);
 }
 
 .fbphotobox-fc-main-container {
@@ -127,6 +132,7 @@
 .fbphotobox-tag:hover {
 	border:3px solid white;
 	box-shadow: 0px 0px 5px #333;
+	opacity: 0.70;
 }
 
 .fbphotobox-tag:hover div {
