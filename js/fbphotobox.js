@@ -1,4 +1,4 @@
-(function($) {
+(($ => {
 	function FBPhotoBox(opts) {
 		this.settings = $.extend({}, $.fn.fbPhotoBox.defaults, opts);
 		this.bodyDimension = {width:0,height:0};
@@ -11,7 +11,7 @@
 	}
 	
 	FBPhotoBox.prototype = {
-		init: function() {
+		init() {
 			var $this = this;
 			this.initDOM();
 			this.initSettings();
@@ -32,19 +32,19 @@
 			});
 			
 			// FBPhotobox stage close
-			$(".fbphotobox-close-btn a").click(function() {
+			$(".fbphotobox-close-btn a").click(() => {
 				$this.hide();
 				return false;
 			});
-			$(".fbphotobox-overlay").click(function() {
+			$(".fbphotobox-overlay").click(() => {
 				$this.hide();
 				return false;
 			});
 			
 			// Left side overlay hover animation
-			$(".fbphotobox-container-left").hover(function() {
+			$(".fbphotobox-container-left").hover(() => {
 				$(".fbphotobox-image-stage-overlay").fadeIn($this.settings.imageOverlayFadeSpeed);
-			}, function() {
+			}, () => {
 				$(".fbphotobox-image-stage-overlay").fadeOut($this.settings.imageOverlayFadeSpeed);
 			});
 			
@@ -54,41 +54,41 @@
 			});
 			
 			// Handle left right click event
-			this.leftArrow.click(function() {
+			this.leftArrow.click(() => {
 				var image = $('.' + $this.settings.containerClassName + ' .' + $this.settings.imageClassName).get($this.leftArrow.attr("data-prev-index"));
 				if (image) $this.show($(image));
 			});
-			this.rightArrow.click(function() {
+			this.rightArrow.click(() => {
 				var image = $('.' + $this.settings.containerClassName + ' .' + $this.settings.imageClassName).get($this.rightArrow.attr("data-next-index"));
 				if (image) $this.show($(image));
 			});
 			
 			// Start of FullScreen Mode Binding //
-			$(".fbphotobox-fc-btn").click(function() {
+			$(".fbphotobox-fc-btn").click(() => {
 				$this.fullScreenMode = true;
 				$this.showFullScreen($this.mainImage);
 				return false;
 			});
-			$(".fc-left-arrow .fbphotobox-a").click(function() {
+			$(".fc-left-arrow .fbphotobox-a").click(() => {
 				$this.leftArrow.click();
 				$this.showFullScreen($this.mainImage);
 			});
-			$(".fc-right-arrow .fbphotobox-a").click(function() {
+			$(".fc-right-arrow .fbphotobox-a").click(() => {
 				$this.rightArrow.click();
 				$this.showFullScreen($this.mainImage);
 			});
-			$(".fbphotobox-fc-close-btn").click(function() {
+			$(".fbphotobox-fc-close-btn").click(() => {
 				$this.fullScreenMode = false;
 				$this.hideFullScreen();
 				return false;
 			});
 			
 			// Bind the window resize callback
-			$(window).resize(function() {
+			$(window).resize(() => {
 				$this.refreshBoxSize();
 			});
 		},
-		show: function(image) {
+		show(image) {
 			$(".fbphotobox-tag").remove();
 			var index = $('.' + this.settings.containerClassName + ' .' + this.settings.imageClassName).index(image);
 			this.fbpMainImage.attr('fbp-index', index);
@@ -106,7 +106,7 @@
 				this.lazyLoadImage.src = image.attr("src");
 			}
 		},
-		hide: function() {
+		hide() {
 			this.IsDisplayed = false;
 			this.lazyLoadImage.src = '';
 			var from = { posX: this.fbpMainImage.offset().left, posY: this.fbpMainImage.offset().top, widthSrc: this.fbpMainImage.width(), heightSrc: this.fbpMainImage.height()};
@@ -114,10 +114,10 @@
 			var tmpNode = $('<img src=""/>').attr("src", this.fbpMainImage.attr("src"));
 			this.fbpMainContainer.fadeOut({easing:'easeOutQuint', queue:false, duration:200});
 			this.fbpOverlay.hide({easing:'easeOutQuint', queue:false, duration:200});
-			this.photoTransitionAnimation(tmpNode, from, to, function() { tmpNode.remove(); });
+			this.photoTransitionAnimation(tmpNode, from, to, () => { tmpNode.remove(); });
 			this.displayScroll();
 		},
-		initDOM: function() {
+		initDOM() {
 			var html = ['<div class="fbphotobox-main-container">',
 							'<div class="fbphotobox-container-left">',
 								'<table class="fbphotobox-main-image-table"><tr><td>',
@@ -186,7 +186,7 @@
 			$("body").append(html.join(""));
 			this.settings.afterInitDOM();
 		},
-		initSettings: function() {
+		initSettings() {
 			if (this.settings.rightWidth != "") {
 				$(".fbphotobox-container-right").css("width", this.settings.rightWidth);
 			}
@@ -211,13 +211,13 @@
 				$(".fbphotobox-overlay").css("opacity", this.settings.overlayBgOpacity);
 			}
 		},
-		hideScroll: function() {
+		hideScroll() {
 			$('body').css({width:$(window).width(),height:$(window).height(), overflow:"hidden"});
 		},
-		displayScroll: function() {
+		displayScroll() {
 			$('body').css({width:this.bodyDimension.width, height:this.bodyDimension.height, overflow:"scroll"});
 		},
-		refreshBoxSize: function(image) {
+		refreshBoxSize(image) {
 			var isShow = image == null? false : true;
 			image = image == null? this.lazyLoadImage : image;
 			var leftContainer = $(".fbphotobox-container-left");
@@ -262,10 +262,10 @@
 					var from = { posX: this.fbpMainImage.posX, posY: this.fbpMainImage.posY, widthSrc: this.fbpMainImage.widthSrc, heightSrc: this.fbpMainImage.heightSrc};
 					var to = { posX: this.fbpMainImage.offset().left, posY: this.fbpMainImage.offset().top, widthSrc: this.fbpMainImage.width(), heightSrc: this.fbpMainImage.height()};
 					var tmpNode = $('<img src=""/>').attr("src", image.src);
-					this.photoTransitionAnimation(tmpNode, from, to, function() {
+					this.photoTransitionAnimation(tmpNode, from, to, () => {
 						$(".fbphotobox-overlay").animate({opacity: 0.9}, {easing: 'easeOutQuint', queue: false, duration: 500});
 						$(".fbphotobox-main-container").animate({opacity: 1}, {easing: 'easeOutQuint', queue: false, duration: 500,
-						complete: function() {
+						complete() {
 							tmpNode.remove();
 						}
 						});
@@ -297,7 +297,7 @@
 			
 			if (!isShow) this.refreshTagSize();
 		},
-		refreshTagSize: function() {
+		refreshTagSize() {
 			var $tag = $(".fbphotobox-tag");
 			var newHeight = this.fbpMainImage.height();
 			var newWidth = this.fbpMainImage.width();
@@ -310,20 +310,20 @@
 				});
 			});
 		},
-		refreshFullScreenSize: function() {
+		refreshFullScreenSize() {
 			$(".fbphotobox-fc-main-image").css({
 				"max-width": $(window).width() - $(".fc-left-arrow").width() - $(".fc-right-arrow").width() - 20,
 				"max-height": $(window).height() - $(".fbphotobox-fc-header").outerHeight(true) - $(".fbphotobox-fc-footer").outerHeight(true)
 			});
 			$(".fbphotobox-fc-main-image").closest("div").css("height", $(window).height() - $(".fbphotobox-fc-header").outerHeight(true) - $(".fbphotobox-fc-footer").outerHeight(true));
 		},
-		repositionBox: function() {
+		repositionBox() {
 			var container = $(".fbphotobox-main-container");
 			var left = ($(window).width() - container.width())/2;
 			var top = ($(window).height() - container.height())/2;
-			$(".fbphotobox-main-container").css({left: left, top: top});
+			$(".fbphotobox-main-container").css({left, top});
 		},
-		addTags: function(tagsCo) {
+		addTags(tagsCo) {
 			var imgHeight = this.fbpMainImage.height();
 			var imgWidth = this.fbpMainImage.width();
 			var tagNode = $(document.createElement('div')).attr("class", "fbphotobox-tag");
@@ -350,14 +350,14 @@
 				tempNode.appendTo(this.fbpMainImage.closest("div"));
 			}
 		},
-		showFullScreen: function(image) {
+		showFullScreen(image) {
 			$(".fbphotobox-fc-main-container").show();
 			this.refreshFullScreenSize();
 		},
-		hideFullScreen: function() {
+		hideFullScreen() {
 			$(".fbphotobox-fc-main-container").hide();
 		},
-		photoTransitionAnimation: function(image, from, to, callbackFunc) {
+		photoTransitionAnimation(image, from, to, callbackFunc) {
 			var leftFrom = from.posX - parseInt($("body").css("margin-left"));
 			var topFrom = from.posY - parseInt($("body").css("margin-top"));
 			var leftTo = to.posX - parseInt($("body").css("margin-left"));
@@ -376,7 +376,7 @@
 				left: leftTo,
 				width: to.widthSrc,
 				height: to.heightSrc
-			}, {duration:500, easing:'easeInOutCubic', complete: function() {
+			}, {duration:500, easing:'easeInOutCubic', complete() {
 				callbackFunc();
 			}, queue:false});
 		}
@@ -388,7 +388,7 @@
 		var instance = item.data('FBPhotoBox');
 		
 		if (typeof options === 'string') {
-			instance[options].apply(instance, args);
+			instance[options](...args);
 		}
 		else {
 			item.data('FBPhotoBox', new FBPhotoBox(options));
@@ -404,11 +404,11 @@
 		footerBgColor: "black",
 		overlayBgColor: "black",
 		overlayBgOpacity: 0.5,
-		onImageShow: function() {},
-		afterInitDOM: function() {},
+		onImageShow() {},
+		afterInitDOM() {},
 		imageOverlayFadeSpeed: 150,
 		normalModeMargin: 40,
 		containerClassName: 'fbphotobox',
 		imageClassName: 'fbphotobox-target-img'
 	};
-}(jQuery));
+})(jQuery));
